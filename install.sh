@@ -45,7 +45,7 @@ of encryption:" 8 78 2 \
 3>&2 2>&1 1>&3)
 
 # Copy the easy-rsa files to a directory inside the new openvpn directory
-cp -r /usr/share/doc/openvpn/examples/easy-rsa/2.0 /etc/openvpn/easy-rsa
+cp -r /usr/share/easy-rsa /etc/openvpn
 
 # Edit the EASY_RSA variable in the vars file to point to the new easy-rsa directory,
 # And change from default 1024 encryption if desired
