@@ -8,6 +8,8 @@ OKEY=".key"
 KEY=".3des.key" 
 CA="ca.crt" 
 TA="ta.key" 
+SCRIPT_DIR=$(pwd)
+
 
 #Ask for a Client name
 #NAME=$(whiptail --inputbox "Please enter a Name for the Client:" \
@@ -84,10 +86,10 @@ cat $TA >> $NAME$FILEEXT
 echo "</tls-auth>" >> $NAME$FILEEXT 
 
 # Copy the .ovpn profile to the home directory for convenient remote access
-cp /etc/openvpn/easy-rsa/keys/$NAME$FILEEXT /home/pi/ovpns/$NAME$FILEEXT
+cp /etc/openvpn/easy-rsa/keys/$NAME$FILEEXT $SCRIPT_DIR/ovpns/$NAME$FILEEXT
 sudo chmod 600 -R /etc/openvpn
-echo "$NAME$FILEEXT moved to home directory."
+echo "$NAME$FILEEXT moved to $SCRIPT_DIR."
 whiptail --title "MakeOVPN" --msgbox "Done! $NAME$FILEEXT successfully created and \
-moved to directory /home/pi/ovpns." 8 78
+moved to directory ${SCRIPT_DIR}/ovpns." 8 78
  
 # Original script written by Eric Jodoin.

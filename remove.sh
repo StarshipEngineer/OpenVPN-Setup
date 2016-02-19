@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(pwd)
+
+
 # Ask user for confirmation
 if (whiptail --title "Remove OpenVPN" --yesno --defaultno "Are you sure you want to remove \
 OpenVPN and revert your system to its previous state?" 8 78) then
@@ -13,7 +16,7 @@ fi
 apt-get -y remove openvpn
 
 # Remove openvpn-related directories
-rm -r /etc/openvpn /home/pi/ovpns
+rm -r /etc/openvpn $SCRIPT_DIR/ovpns
 
 # Remove firewall script and reference to it in interfaces
 sed -i '/firewall-openvpn-rules.sh/d' /etc/rc.local
