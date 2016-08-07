@@ -57,8 +57,8 @@ Execute the script with:
 
 ```shell
 cd OpenVPN-Setup
-sudo chmod +x openvpnsetup.sh
-sudo ./openvpnsetup.sh
+sudo chmod +x *.sh
+sudo BASE_DIR=$PWD ./openvpnsetup.sh
 ```
 
 The script will show you a menu of options. If this is your first time running the script,
