@@ -43,7 +43,7 @@ Git. If you don't already have it, update your APT repositories and install it:
 ```shell
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install git
+sudo apt-get install whiptail git
 ```
 
 Then download the latest setup script via the command line with:
