@@ -84,10 +84,10 @@ cat $TA >> $NAME$FILEEXT
 echo "</tls-auth>" >> $NAME$FILEEXT 
 
 # Copy the .ovpn profile to the home directory for convenient remote access
-cp /etc/openvpn/easy-rsa/keys/$NAME$FILEEXT /home/pi/ovpns/$NAME$FILEEXT
+cp /etc/openvpn/easy-rsa/keys/$NAME$FILEEXT /home/`logname`/ovpns/$NAME$FILEEXT
 sudo chmod 600 -R /etc/openvpn
 echo "$NAME$FILEEXT moved to home directory."
 whiptail --title "MakeOVPN" --msgbox "Done! $NAME$FILEEXT successfully created and \
-moved to directory /home/pi/ovpns." 8 78
+moved to directory /home/`logname`/ovpns." 8 78
  
 # Original script written by Eric Jodoin.
