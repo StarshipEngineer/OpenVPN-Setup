@@ -84,7 +84,7 @@ echo "<tls-auth>" >> $NAME$FILEEXT
 cat $PUBPATH$TA >> $NAME$FILEEXT 
 echo "</tls-auth>" >> $NAME$FILEEXT 
 
-# Copy the .ovpn profile to the home directory for convenient remote access
+# Copy the .ovpn profile to the home directory for convenient remote access - something here is broken, other than pi folder
 cp /etc/openvpn/easy-rsa/$KEYPATH$NAME$FILEEXT /home/pi/ovpns/$NAME$FILEEXT
 chmod 600 -R /etc/openvpn
 echo "$NAME$FILEEXT moved to ovpns directory."
