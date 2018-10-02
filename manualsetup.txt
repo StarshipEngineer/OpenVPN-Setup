@@ -1,0 +1,73 @@
+#DOWNLOAD/INSTALL OPENVPN & EASY-RSA
+#Install openvpn
+apt-get -y install openvpn
+
+#Install easy-rsa v3.0.5
+cd /etc/openvpn
+mkdir easy-rsa
+wget https://github.com/OpenVPN/easy-rsa/archive/v3.0.5.zip
+unzip v3.0.5.zip
+rm v3.0.5.zip
+cp -r /etc/openvpn/easy-rsa-3.0.5/easyrsa3/. /etc/openvpn/easy-rsa
+
+#EASY-RSA SETUP
+cd /etc/openvpn/easy-rsa
+cp vars.example vars
+
+sudo nano vars
+#Point to easy-rsa
+set_var EASYRSA	"/etc/openvpn/easy-rsa"
+
+#Set the key size if desired
+set_var EASYRSA_KEY_SIZE	 1024
+
+#Clean any previous PKI & build the CA
+./easyrsa init-pki
+./easyrsa build-ca
+
+#Build server key pair
+./easyrsa build-server-full server #error messages appear here re index.txt
+
+#Generate Diffie-Hellman exchange
+./easyrsa gen-dh
+
+#Generate HMAC key
+openvpn --genkey --secret pki/ta.key
+
+#SETUP OPENVPN SERVER
+#Write config file for server using the template .txt file
+cp /home/$USER/OpenVPN-Setup/server_config.txt /etc/openvpn/server/server.conf
+
+#Change local IP address
+sudo nano /etc/openvpn/server/server.conf
+LOCALIP=111.111.1.11
+
+#Enable forwarding of internet traffic
+sudo nano /etc/sysctl.conf
+net.ipv4.ip_forward=1
+sysctl -p
+
+#Write script to run openvpn and allow it through firewall on boot using the template .txt file
+sudo cp /home/pi/OpenVPN-Setup/firewall-openvpn-rules.txt /etc/firewall-openvpn-rules.sh
+sudo nano /etc/firewall-openvpn-rules.sh
+LOCALIP=111.111.1.11
+
+sudo chmod 700 /etc/firewall-openvpn-rules.sh
+sudo chown root /etc/firewall-openvpn-rules.sh
+sed -i -e '$i \/etc/firewall-openvpn-rules.sh\n' /etc/rc.local
+sed -i -e '$i \sudo service openvpn start\n' /etc/rc.local
+
+# Write default file for client .ovpn profiles, to be used by the MakeOVPN script, using template .txt file
+sudo cp /home/pi/OpenVPN-Setup/default.txt /etc/openvpn/easy-rsa/pki/private/default.txt
+sudo nano /etc/openvpn/easy-rsa/pki/private/default.txt
+PUBLICIP=11.111.111.11
+
+# Make directory under home directory for .ovpn profiles
+mkdir /home/pi/ovpns
+chmod 777 -R /home/pi/ovpns
+
+# Make other scripts in the package executable
+cd /home/pi/OpenVPN-Setup
+chmod +x MakeOVPN.sh
+chmod +x remove.sh
+chmod +x clean-ovpns.sh
