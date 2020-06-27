@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #For now, enter: EasyRSA-3.0.7
-EASYRSA=$(whiptail --inputbox "Which user is the server to be run under?" \
+EASYRSA=$(whiptail --inputbox "Enter the EasyRSA version to obtain from GitHub repo (Ex: EasyRSA-3.0.7)" \
 8 78 --title "Setup OpenVPN" 3>&1 1>&2 2>&3)
 exitstatus=$?
 if [ $exitstatus = 0 ]; then

@@ -45,6 +45,7 @@ else
 fi
 
 #Build the public key infrastructure
+cd EasyRSA-3.0.7
 ./easyrsa init-pki
 
 #Generate a certificate request
@@ -56,16 +57,8 @@ cp ~/EasyRSA-3.0.7/pki/private/server.key /etc/openvpn/
 #securely copy server.req to CA machine
 scp ~/EasyRSA-3.0.7/pki/reqs/server.req $CA_USER@$CA_IP:/tmp #Whiptail in CA user and ip address
 
-#-----------
-
-#ON CA MACHINE:
-
-#Import the request, sign the request, transfer signed certificate to server, and transfer CA certificate to server
-ssh $CA_USER@$CA_IP "cd ~/EasyRSA-3.0.7/ && ./easyrsa import-req /tmp/server.req server && ./easyrsa sign-req server server && scp pki/issued/server.crt sammy@your_server_ip:/tmp && scp pki/ca.crt sammy@your_server_ip:/tmp"
-
-#Replace the above command with a single execution of a script from CA-Setup
-
-#-----------
+#Invoke CA-Setup to sign the key and transfer it back to the server, as well as CA certificate
+ssh $CA_USER@$CA_IP "cd ~/CA-Setup && ./sign-req.sh $LOCAL_USER $LOCAL_IP && ./get-ca-cert.sh $LOCAL_USER $LOCAL_IP"
 
 #Copy certificates to openvpn
 cp /tmp/{server.crt,ca.crt} /etc/openvpn/
