@@ -3,9 +3,10 @@
 CLIENT_NAME=$1 #First argument must be the name of the client to create
 CA_USER=$2 #Second argument must be the user running the CA machine
 CA_IP=$3 #Third argument must be the IP address of the CA machine
+EASYRSA=$4 #Fourth argument must be the version of EasyRSA
 
 #Generate a request for a client
-cd ~/EasyRSA-3.0.7/
+cd ~/$EASYRSA/
 ./easyrsa gen-req $CLIENT_NAME nopass
 
 #Copy the key to client directory

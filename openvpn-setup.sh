@@ -56,10 +56,25 @@ else
  exit
 fi
 
-#Ordering of scripts for building the server
+#Read from the user the EasyRSA version to use to pass down
+EASYRSA=$(whiptail --inputbox "Enter the EasyRSA version to obtain from GitHub repo (Ex: EasyRSA-3.0.7)" \
+8 78 --title "Setup OpenVPN" 3>&1 1>&2 2>&3)
+exitstatus=$?
+if [ $exitstatus = 0 ]; then
+ whiptail --title "Setup OpenVPN" --infobox "Version: $EASYRSA" 8 78
+else
+ whiptail --title "Setup OpenVPN" --infobox "Cancelled" 8 78
+ exit
+fi
 
-./install-packages.sh
-./build-server.sh
+
+
+#Ordering of scripts for building the server
+./install-packages.sh $EASYRSA
+./build-server.sh $EASYRSA $SERVER_NAME $LOCAL_USER $LOCAL_IP $CA_USER $CA_IP
 
 #Script to build a client
-./build-client.sh
+./build-client.sh $CLIENT_NAME $CA_USER $CA_IP $EASYRSA #Must define client name... within script?
+
+#Script to configure the server
+./config-server.sh
