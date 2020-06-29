@@ -21,7 +21,7 @@ cp ~/EasyRSA-3.0.7/pki/private/$SERVER_NAME.key /etc/openvpn/
 scp ~/EasyRSA-3.0.7/pki/reqs/$SERVER_NAME.req $CA_USER@$CA_IP:/tmp
 
 #Invoke CA-Setup to sign the key and transfer it back to the server, as well as CA certificate
-ssh $CA_USER@$CA_IP "cd ~/CA-Setup && ./sign-req.sh $LOCAL_USER $LOCAL_IP $SERVER_NAME server && ./get-ca-cert.sh $LOCAL_USER $LOCAL_IP"
+ssh $CA_USER@$CA_IP "cd ~/CA-Setup && ./sign-req.sh $LOCAL_USER $LOCAL_IP server $SERVER_NAME && ./get-ca-cert.sh $LOCAL_USER $LOCAL_IP"
 
 #Copy certificates to openvpn
 cp /tmp/{$SERVER_NAME.crt,ca.crt} /etc/openvpn/
@@ -37,7 +37,13 @@ openvpn --genkey --secret ta.key
 cp ~/EasyRSA-3.0.7/ta.key /etc/openvpn/
 cp ~/EasyRSA-3.0.7/pki/dh.pem /etc/openvpn/
 
+#The next few steps prepare the server for generating client keys
+
 #Make directory for client keys and set permissions to restrict access
 cd ~
 mkdir -p ~/client-configs/keys
 chmod -R 700 ~/client-configs
+
+#Copy CA certificate and the HMAC signature to the client-configs folder
+cp ~/EasyRSA-v3.0.6/ta.key ~/client-configs/keys/
+cp /etc/openvpn/ca.crt ~/client-configs/keys/

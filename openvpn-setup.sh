@@ -55,3 +55,11 @@ else
  whiptail --title "Setup OpenVPN" --infobox "Cancelled" 8 78
  exit
 fi
+
+#Ordering of scripts for building the server
+
+./install-packages.sh
+./build-server.sh
+
+#Script to build a client
+./build-client.sh
