@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SERVER_NAME=$1 #First argument must be the name of the server
+LOCAL_IP=$2 #Seond argument must be the local address of the server
 
 #Copy example config file
 cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
@@ -37,5 +38,9 @@ sed -i s/'server.key'/$SERVER_NAME.key /etc/server.conf
 sed -i '/#net.ipv4.ip_forward=1/cnet.ipv4.ip_forward=1' /etc/sysctl.conf
 sysctl -p
 
-
-
+# Write script to run openvpn and allow it through firewall on boot using the template .txt file
+sed 's/LOCALIP/'$LOCAL_IP'/' </OpenVPN-Setup/firewall-openvpn-rules.txt >/etc/firewall-openvpn-rules.sh #will this work for arbitrary user?
+chmod 700 /etc/firewall-openvpn-rules.sh
+chown root /etc/firewall-openvpn-rules.sh
+sed -i -e '$i \/etc/firewall-openvpn-rules.sh\n' /etc/rc.local
+sed -i -e '$i \sudo service openvpn start\n' /etc/rc.local   #will rc.local work here?
